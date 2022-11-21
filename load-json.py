@@ -6,7 +6,7 @@ filename = input("Enter the json filename: ") # will need to handle errors l8tor
 portnum = int(input("Enter the mongodb port number: "))
 
 # === INIT DATABASE ===
-client = pymongo.MongoClient("??????" + str(portnum))
+client = pymongo.MongoClient("mongodb://localhost:" + str(portnum))
 
 dblist = client.list_database_names()
 if "291db" not in dblist:
@@ -17,10 +17,10 @@ else:
 # === INIT COLLECTION ===
 collist = db.list_collection_names()
 if "dblp" in collist:
-    collection = db["dblp"]
     collection.drop()
-
-collection = db["dblp"]
+    collection = db["dblp"]
+else:
+    collection = db["dblp"]
 
 # === LOAD JSON INTO COLLECTION ===
 filename = filename + ".json"
