@@ -12,13 +12,14 @@ dblist = client.list_database_names()
 if "291db" not in dblist:
     db = client["291db"]
 else:
-    print("database exists")
+    db = client["291db"]
+
 
 # === INIT COLLECTION ===
 collist = db.list_collection_names()
 if "dblp" in collist:
-    collection.drop()
     collection = db["dblp"]
+    collection.drop()
 else:
     collection = db["dblp"]
 
