@@ -147,52 +147,6 @@ def search_for_authors():
         return
 
 
-def search_for_authors():
-    clear_terminal()
-    user_keywords = ''
-
-    print("Search For Authors:")
-    while user_keywords == '' or user_keywords.isspace():
-        user_keywords = input("Enter Keywords: ")
-    keywords = user_keywords.split()
-    keywords = set(keywords)
-    
-    authors, pub_count = database.search_for_authors(keywords)
-    
-    # === display authors ===
-    i = 0
-    for author in authors:
-        print(str(i) + ". Name: " + author + " Publication Count: " + str(pub_count[i]))
-        i += 1
-    
-    # === select an author ===
-    user_in = ''
-    while user_in.lower() not in ['y', 'n']:
-        user_in = input("Would you like to select an author? (Y/N): ")
-    
-    if user_in.lower() == 'y':
-        # convert list to be workable
-        authors_lower = []
-        for author in authors:
-            authors_lower.append(author.lower())
-   
-        user_in = ''
-        while user_in.lower() not in authors_lower:
-            user_in = input("Type an author's name: ")
-    
-        # === get selected author details ===
-        author_details = database.get_author_details(user_in)
-        
-        # === display the details ===
-        clear_terminal()
-        print(str(user_in.upper()) + ":") # print the author name at the top
-        for i in range(len(author_details)):
-            print("Title: " + str(author_details[0][i]) + "\n"
-                  "Year: " + str(author_details[1][i]) + "\n"
-                  "Venue: " + str(author_details[2 ][i] + "\n\n"))
-    elif user_in.lower() == 'n':
-        return
-
 def main_menu():
     user_in = ''
     while user_in not in ['5']:
