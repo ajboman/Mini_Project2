@@ -47,6 +47,19 @@ def search_for_authors(keywords):
     keywords = list(keywords)
     publication_count = []
     
+    articles = collection.find({'$and':[
+                                    {'authors': re.compile(keywords[0], re.IGNORECASE)},
+                                    {'title': re.compile(keywords[0], re.IGNORECASE)}
+                                ]})
+    for article in articles:
+        print(article) 
+    return articles
+
+def search_for_authors(keywords):
+    global db, client, collection
+    keywords = list(keywords)
+    publication_count = []
+    
     authors = collection.find({}, {'authors': re.compile(keywords[0], re.IGNORECASE)})
     
     for author in authors:
