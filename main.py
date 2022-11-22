@@ -63,7 +63,7 @@ def search_for_authors():
                   "Venue: " + str(author_details[2 ][i] + "\n\n")
  
     
-    else if user_in.lower() == 'n':
+    elif user_in.lower() == 'n':
         return
 
 def main_menu():
