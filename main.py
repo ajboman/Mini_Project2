@@ -3,7 +3,62 @@ import database
 import os
 
 
+def add_article():
+    # adds an article to the collection
+    unique = False
+
+    clear_terminal()
+    print("Adding An Article:")
+
+    # get id from input and make sure it is unique
+    id_input = ''
+    clear_terminal()
+    while (not unique) or (id_input == '' or id_input.isspace()):
+        print("Adding An Article:")
+        id_input = input('Enter a Unique ID: ')
+        unique = database.check_unique_id(id_input)
+        print("Error: ID Not Unique. Try Again.")
+
+    # get title from user input
+    title_input = ''
+    clear_terminal()
+    while title_input == '' or title_input.isspace():
+        print("Adding An Article:")
+        title_input = input("Enter a Title: ")
+
+    # get author list from user input
+    author_list = []
+    author_input = ''
+    while author_input == '' or author_input.isspace():
+        clear_terminal()
+        print("Adding An Article:")
+        author_input = input("Enter Authors Separated by a Comma: ")
+    authors = author_input.split(',')
+    for author in authors:
+        author_list.append(author)
+    
+    # get year from user input
+    year_input = ''
+    clear_terminal()
+    print("Adding An Article:")
+    while year_input == '' or year_input.isspace() or len(year_input) != 4 or not year_input.isdigit():
+        year_input = input("Enter a Year: ")
+        print("Error: Year Must Be A 4 Digit Integer. Try Again.")
+    
+    # add and check result
+    clear_terminal()
+    result = database.add_article(id_input, title_input, author_list, year_input)
+    if result != None:
+        clear_terminal()
+        print("Article Added Successfully!")
+        input("Press Enter To Return To The Menu.")
+    else:
+        print("Error: Article Add Unsuccessful. :(")
+    return
+
+
 def more_article_information(article):
+    # Print all fields from the given article if the exist
     referencing_articles = database.get_referencing_articles(article)
     clear_terminal()
     # Abstract
@@ -67,13 +122,14 @@ def more_article_information(article):
 
 
 def article_menu(articles):
+    # get the users choice on which article to select or return to menu
     index = []
     counter = 1
     clear_terminal()
     temp_list = []
     for article in articles:
         temp_list.append(article)
-        print(str(counter) + '.', article['id'], article['title'], article['year'], article['venue'])
+        print('\n' + str(counter) + '. ID:', article['id'], '\nTitle: ', article['title'], '\nYear:', article['year'], '\nVenue:', article['venue'])
         index.append(str(counter))
         counter += 1
     if len(index) != 0:
@@ -89,6 +145,7 @@ def article_menu(articles):
         return
 
 def search_for_articles():
+    # gets keywords and searches for the articles
     clear_terminal()
     user_keywords = ''
     
@@ -148,7 +205,9 @@ def search_for_authors():
 
 
 def main_menu():
+    # display the main menu screen
     user_in = ''
+    # loop unless exit is selected
     while user_in not in ['5']:
         clear_terminal()
         print('Main Menu:')
@@ -167,12 +226,14 @@ def main_menu():
         elif user_in == '3': # List the Venues
             pass
         elif user_in == '4': # Add an Article
+            add_article()
             pass
         elif user_in == '5': # Exit
             return
 
 
 def clear_terminal():
+    # clear terminal for output purposes
     os.system('cls' if os.name == 'nt' else 'clear')
     return
 

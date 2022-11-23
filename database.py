@@ -16,7 +16,7 @@ def connect_to_db():
 
 def search_for_articles(keywords):
     # only works for one keyword right now
-    global db, client, collection
+    global db, collection
     keywords = list(keywords)
     query = []
     if len(keywords) == 1:
@@ -43,7 +43,7 @@ def search_for_articles(keywords):
 
 
 def search_for_authors(keywords):
-    global db, client, collection
+    global db, collection
     keywords = list(keywords)
     publication_count = []
     
@@ -56,7 +56,7 @@ def search_for_authors(keywords):
     return authors, publication_count
 
 def get_author_details(author_name):
-    global db, client, collection
+    global db, collection
     author = collection.find({}, {'authors': re.compile(author_name, re.IGNORECASE)})
     
     author_details = collection.find({}, {'title': {'authors': author},
@@ -66,7 +66,7 @@ def get_author_details(author_name):
     return author_details
 
 def get_referencing_articles(article):
-    global db, client, collection
+    global db, collection
     article_id = article['id']
     references = collection.find({'references': article_id})
     referencing_articles = []
@@ -75,3 +75,28 @@ def get_referencing_articles(article):
     if len(referencing_articles) == 0:
         return None
     return referencing_articles
+
+
+def check_unique_id(id):
+    global db, collection
+    cursor = db.collection.find({'id':id})
+    result = list(cursor)
+    if len(result) == 0:
+        return True
+    return False
+
+def add_article(id, title, authors, year):
+    global db, collection
+    # create document to be inserted
+    document = {}
+    document['abstract'] = "" # equivalent to NULL
+    document['authors'] = authors
+    document['n_citation'] = 0
+    document['references'] = []
+    document['title'] = title
+    document['venue'] = "" # equivalent to NULL
+    document['year'] = year
+    document['id'] = id
+    # insert data
+    result = db.dblp.insert_one(document)
+    return result.inserted_id
