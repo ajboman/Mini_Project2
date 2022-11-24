@@ -42,25 +42,29 @@ def search_for_articles(keywords):
         return articles
 
 
-def search_for_authors(keywords):
+def search_for_authors(keyword):
     global db, collection
-    keywords = list(keywords)
-    
-    authors = collection.find({'authors': re.compile(keywords[0], re.IGNORECASE)})
-
+    authors = []
+    cursor = collection.find({'authors': re.compile(keyword, re.IGNORECASE)})
+    for item in cursor:
+        for author in item['authors']:
+            if keyword.upper() in author.upper():
+                authors.append(author)
+    authors = set(authors)
+    authors = list(authors)
     return authors
 
 def get_author_pub_count(author):
     global db, collection
     
-    count = collection.count_documents({'titles': {'authors': author}})
+    count = collection.count_documents({'authors': author})
     
     return count
 
 def get_author_details(author_name):
     global db, collection
     
-    author_details = collection.find({'authors': author_name}, {'title': 1, 'year': 1, 'venue': 1})
+    author_details = collection.find({'authors': author_name}, {'title': 1, 'year': 1, 'venue': 1}).sort('year', -1)
 
     return author_details
 

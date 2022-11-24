@@ -1,6 +1,7 @@
 import pymongo
 import database
 import os
+import re
 
 
 def add_article():
@@ -165,25 +166,21 @@ def search_for_authors():
     while user_keywords == '' or user_keywords.isspace():
         user_keywords = input("Enter Keywords: ")
     keywords = user_keywords.split()
-    keywords = set(keywords)
+    keyword = keywords[0]
     
-    authors = database.search_for_authors(keywords)
-    #pub_count = database.get_author_pub_count(authors)
+    authors = database.search_for_authors(keyword)
     
     # === display authors ===
-    i = 0
+    i = 1
     index = []
-    temp_list = []
+    clear_terminal()
     for author in authors:
-        for person in author['authors']:
-            for keyword in user_keywords:
-                if keyword in person:
-                    temp_list.append(person)
-                    pub_count = database.get_author_pub_count(person)
-                    print(str(i) + ". Name: " + person + " Publication Count: " + str(pub_count))
-                    index.append(str(i))
-                    i += 1
+        pub_count = database.get_author_pub_count(author)
+        print(str(i) + ". Name: " + author + " Publication Count: " + str(pub_count))
+        index.append(str(i))
+        i += 1
     
+
     # === select an author ===
     user_in = ''
     while user_in.lower() not in ['y', 'n']:
@@ -196,12 +193,12 @@ def search_for_authors():
             user_in = input("Type an author's number: ")
     
         # === get selected author details ===
-        author_details = database.get_author_details(temp_list[int(user_in)])
+        author_details = database.get_author_details(authors[int(user_in)-1])
         
         # === display the details ===
         clear_terminal()
         
-        print(str(temp_list[int(user_in)].upper()) + ":") # print the author name at the top
+        print(str(authors[int(user_in)-1].upper()) + ":") # print the author name at the top
         
         for elem in author_details:
             print("Title: " + str(elem['title']) + "\n" + "Year: " + str(elem['year']) + "\n" + "Venue: " + str(elem['venue']) + "\n\n")
@@ -213,8 +210,8 @@ def search_for_authors():
 def list_venues():
     clear_terminal()
     user_num = ''
-    while type(user_num) != 'int':
-        user_num = int(input("Enter a number: "))
+    while not user_num.isdigit():
+        user_num = input("Enter a number: ")
     
     venue_details = database.get_venues()
     
@@ -245,6 +242,7 @@ def main_menu():
         elif user_in == '2': # Search for Authors
             search_for_authors()
         elif user_in == '3': # List the Venues
+            list_venues()
             pass
         elif user_in == '4': # Add an Article
             add_article()
