@@ -202,7 +202,20 @@ def search_for_authors():
                   "Venue: " + str(author_details[2 ][i] + "\n\n"))
     elif user_in.lower() == 'n':
         return
-
+def list_venues():
+    clear_terminal()
+    user_num = ''
+    while type(user_num) != 'int':
+        user_num = int(input("Enter a number: "))
+    
+    venue_details = database.get_venues()
+    
+    if len(venue_details[0]) <= user_num:
+        for i in range(len(venue_details)):
+            print("Venue: " + venue_details[0][i] "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
+    else:
+        for i in range(user_num):
+            print("Venue: " + venue_details[0][i] "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
 
 def main_menu():
     # display the main menu screen
