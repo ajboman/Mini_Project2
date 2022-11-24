@@ -5,7 +5,7 @@ import json
 filename = ''
 while filename: == '':
     filename = input("Enter the json filename: ")
-if filename[-5] != ".json":
+if filename[-5:] != ".json":
       filename = filename + ".json"
 
 portnum = ''
