@@ -100,3 +100,29 @@ def add_article(id, title, authors, year):
     # insert data
     result = db.dblp.insert_one(document)
     return result.inserted_id
+
+def get_venues():
+    global db, client, collection
+    venue_details = []
+    
+    # === get all venues ===
+    venues = collection.find({'venue': 1})
+
+    # === get the number of articles for each venue ===
+    for venue in venues:
+        articles_num = collection.count_documents({'title': {'venue': venue}}) # get the number of articles in the venue?
+    # === numbers of articles that reference a paper ===
+    references = collection.count_documents({'references': 1}) # get all references?
+    for reference in references and venue in venues:
+        reference_num = collection.count_documents({'$and': [{'id': reference},
+                                                             {'venue': venue}]})
+    # === sort ===
+    for reference in references and venue in venues:
+        venues_sorted = collection.find(collection.find({'venue': 1})).sort({'$and': [{'id': reference},
+                                                                                      {'venue': venue}]})
+    
+    # === append lists to venue details and return ===
+    venue_details.append(venues_sorted)
+    venue_details.append(articles_num)
+    venue_details.append(reference_num)
+    return venue_details
