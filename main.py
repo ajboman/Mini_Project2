@@ -213,12 +213,12 @@ def list_venues():
     while not user_num.isdigit():
         user_num = input("Enter a number: ")
     
-    venue_details = database.get_venues()
+    venue_details = database.get_venues(int(user_num))
     
     counter = 0
     for elem in venue_details:
-        if (counter <= int(user_num)) and (elem['_id'] != ''):
-            print(elem['_id'] + " Articles in Venue: " + str(elem['art_in_ven']) + " Papers Referenced: " + str(elem['paper_count']))
+        if (counter < int(user_num)) and (elem['_id'] != ''):
+            print("\n"+str(counter+1) + ". " + elem['_id'] + "\nArticles in Venue: " + str(elem['art_in_ven']) + "\nPapers Referenced: " + str(elem['paper_count']))
             counter += 1
     
     user_num = input("Press Enter To Continue. . .")
@@ -266,6 +266,7 @@ def clear_terminal():
     return
 
 def main():
+    clear_terminal()
     database.connect_to_db()
     main_menu()
     return

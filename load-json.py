@@ -41,6 +41,7 @@ db.dblp.create_index([
 db.dblp.create_index(
 [('authors', -1)])
 
+
 # === LOAD JSON INTO COLLECTION ===
 jsonfile = open(filename, 'r')
 

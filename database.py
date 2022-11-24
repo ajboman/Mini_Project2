@@ -94,19 +94,23 @@ def add_article(id, title, authors, year):
     result = db.dblp.insert_one(document)
     return result.inserted_id
 
-def get_venues():
+def get_venues(limit):
     global db, client, collection
-
+    venues = []
     pipeline = [
                 {
                    '$group': {
                                 '_id': '$venue',
-                                'art_in_ven': {'$sum': '$references'},
-                                'paper_count': {'$sum': 1}
-                             } 
-                }
-               ]
+                                'paper_count': {'$sum': '$references'},
+                                'art_in_ven': {'$sum': 1},
+                             }}, 
+                             {
+                                "$limit":limit
+                             },
+                             {
+                                "$sort":{'art_in_ven':-1}
+                             }]
     
-    aggregation = collection.aggregate(pipeline)
-
+    aggregation = db.dblp.aggregate(pipeline)
+    
     return aggregation
