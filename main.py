@@ -215,12 +215,13 @@ def list_venues():
     
     venue_details = database.get_venues()
     
-    if len(venue_details[0]) <= user_num:
-        for i in range(len(venue_details)):
-            print("Venue: " + venue_details[0][i] + "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
-    else:
-        for i in range(user_num):
-            print("Venue: " + venue_details[0][i] + "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
+    counter = 0
+    for elem in venue_details:
+        if (counter <= int(user_num)) and (elem['_id'] != ''):
+            print(elem['_id'] + " Articles in Venue: " + str(elem['art_in_ven']) + " Papers Referenced: " + str(elem['paper_count']))
+            counter += 1
+    
+    user_num = input("Press Enter To Continue. . .")
 
 def main_menu():
     # display the main menu screen
