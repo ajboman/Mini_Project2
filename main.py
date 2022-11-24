@@ -189,7 +189,7 @@ def search_for_authors():
     if user_in.lower() == 'y':
 
         user_in = ''
-        while not user_in.isdigit() and user_in not in index:
+        while user_in not in index:
             user_in = input("Type an author's number: ")
     
         # === get selected author details ===
@@ -221,6 +221,14 @@ def list_venues():
     else:
         for i in range(user_num):
             print("Venue: " + venue_details[0][i] + "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
+
+def top_venues():
+    clear_terminal()
+    user_num = ''
+    while not user_num.isdigit():
+        user_num = input("Enter a number: ")
+    venue_details = database.get_top_venues()
+    return
 
 def main_menu():
     # display the main menu screen

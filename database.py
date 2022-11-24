@@ -19,46 +19,36 @@ def search_for_articles(keywords):
     global db, collection
     keywords = list(keywords)
     query = []
-    if len(keywords) == 1:
-        query.append({'authors': re.compile(keywords[0], re.IGNORECASE)})
-        query.append({'title': re.compile(keywords[0], re.IGNORECASE)})
-        query.append({'abstract': re.compile(keywords[0], re.IGNORECASE)})
-        query.append({'venue': re.compile(keywords[0], re.IGNORECASE)})
-        query.append({'year': re.compile(keywords[0], re.IGNORECASE)})
-        articles = collection.find({'$or' : query})
-        return articles
-    else:
-        for keyword in keywords:
-            temp_query = []
-            temp_query2 = {}
-            temp_query.append({'authors': re.compile(keyword, re.IGNORECASE)})
-            temp_query.append({'title': re.compile(keyword, re.IGNORECASE)})
-            temp_query.append({'abstract': re.compile(keyword, re.IGNORECASE)})
-            temp_query.append({'venue': re.compile(keyword, re.IGNORECASE)})
-            temp_query.append({'year': re.compile(keyword, re.IGNORECASE)})
-            temp_query2['$or'] = temp_query
-            query.append(temp_query2)
-        articles = collection.find({'$and': query})
-        return articles
+    query_words = ""
+    for word in keywords:
+        query_words += '"'+ (word) + '"'
+    query = [{"$match": {"$text": {"$search": query_words}}}]
+    articles = db.dblp.aggregate(query)
+    return articles
 
 
 def search_for_authors(keyword):
     global db, collection
     authors = []
-    cursor = collection.find({'authors': re.compile(keyword, re.IGNORECASE)})
+    query = [{"$match": {"authors": re.compile(keyword, re.IGNORECASE)}}]
+    cursor = db.dblp.aggregate(query)
+
     for item in cursor:
         for author in item['authors']:
             if keyword.upper() in author.upper():
                 authors.append(author)
-    authors = set(authors)
-    authors = list(authors)
+    
     return authors
 
 def get_author_pub_count(author):
     global db, collection
-    
-    count = collection.count_documents({'authors': author})
-    
+    count = '-1'
+    cursor = db.dblp.aggregate([
+        { "$match": {"authors": author} },
+        { "$group": { "_id": "authors", "count": {"$sum": 1}}}])
+    for item in cursor:
+        count = item['count']
+
     return count
 
 def get_author_details(author_name):
