@@ -2,8 +2,15 @@ import pymongo
 import json
 
 # === GET JSON FILE NAME AND PORT ===
-filename = input("Enter the json filename: ") # will need to handle errors l8tor
-portnum = int(input("Enter the mongodb port number: "))
+filename = ''
+while filename: == '':
+    filename = input("Enter the json filename: ")
+if filename[-5] != ".json":
+      filename = filename + ".json"
+
+portnum = ''
+while type(portnum) != 'int':
+    portnum = int(input("Enter the mongodb port number: "))
 
 # === INIT DATABASE ===
 client = pymongo.MongoClient("mongodb://localhost:" + str(portnum))
@@ -24,9 +31,8 @@ else:
     collection = db["dblp"]
 
 # === LOAD JSON INTO COLLECTION ===
-filename = filename + ".json"
 jsonfile = open(filename, 'r')
 
 for jsonObj in jsonfile:
     data = json.loads(jsonObj)
-    collection.insert_one(data) # should insert line by line?
+    collection.insert_one(data)
