@@ -212,10 +212,10 @@ def list_venues():
     
     if len(venue_details[0]) <= user_num:
         for i in range(len(venue_details)):
-            print("Venue: " + venue_details[0][i] "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
+            print("Venue: " + venue_details[0][i] + "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
     else:
         for i in range(user_num):
-            print("Venue: " + venue_details[0][i] "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
+            print("Venue: " + venue_details[0][i] + "Articles: " + str(venue_details[1][i]) + "References: " + str(venue_details[2][i]))
 
 def main_menu():
     # display the main menu screen
