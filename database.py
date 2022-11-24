@@ -45,24 +45,23 @@ def search_for_articles(keywords):
 def search_for_authors(keywords):
     global db, collection
     keywords = list(keywords)
-    publication_count = []
     
     authors = collection.find({'authors': re.compile(keywords[0], re.IGNORECASE)})
-    
-    for author in authors:
-        count = collection.countDocuments({'authors': author})
-        publication_count.append(count)
 
-    return authors, publication_count
+    return authors
+
+def get_author_pub_count(author):
+    global db, collection
+    
+    count = collection.count_documents({'titles': {'authors': author}})
+    
+    return count
 
 def get_author_details(author_name):
     global db, collection
-    author = collection.find({'authors': re.compile(author_name, re.IGNORECASE)})
     
-    author_details = collection.find({'title': {'authors': author},
-                                          'year': {'authors': author},
-                                          'venue': {'authors': author}
-                                         }).sort({'year': -1})
+    author_details = collection.find({'authors': author_name}, {'title': 1, 'year': 1, 'venue': 1})
+
     return author_details
 
 def get_referencing_articles(article):
