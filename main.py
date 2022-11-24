@@ -169,7 +169,7 @@ def search_for_authors():
     keyword = keywords[0]
     
     authors = database.search_for_authors(keyword)
-    
+    authors = list(set(authors))
     # === display authors ===
     i = 1
     index = []

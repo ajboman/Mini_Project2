@@ -30,14 +30,6 @@ if "dblp" in collist:
 
 collection = db["dblp"]
 
-# === LOAD JSON INTO COLLECTION ===
-jsonfile = open(filename, 'r')
-
-for jsonObj in jsonfile:
-    data = json.loads(jsonObj)
-    collection.insert_one(data)
-
-
 # === CREATE INDICES === #
 db.dblp.create_index([
 ("authors", "text"),
@@ -47,5 +39,14 @@ db.dblp.create_index([
 ("title", "text")
 ])
 db.dblp.create_index(
-{"authors": 1}
-)
+[('authors', -1)])
+
+# === LOAD JSON INTO COLLECTION ===
+jsonfile = open(filename, 'r')
+
+for jsonObj in jsonfile:
+    data = json.loads(jsonObj)
+    collection.insert_one(data)
+
+
+
