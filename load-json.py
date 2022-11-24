@@ -9,8 +9,8 @@ if filename[-5:] != ".json":
       filename = filename + ".json"
 
 portnum = ''
-while type(portnum) != 'int':
-    portnum = int(input("Enter the mongodb port number: "))
+while not portnum.isdigit():
+    portnum = input("Enter the mongodb port number: ")
 
 # === INIT DATABASE ===
 client = pymongo.MongoClient("mongodb://localhost:" + str(portnum))
